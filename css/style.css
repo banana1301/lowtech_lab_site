@@ -1,0 +1,121 @@
+*{
+    direction: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: black;
+    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Source Code Pro', monospace;
+}
+
+header{
+    color: black;
+
+}
+
+.sigle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav h1{
+    font-size: 60px;
+    margin-right: 210px;
+}
+
+nav .icone{
+    font-size: 30px;
+}
+
+nav #daltonien{
+    margin-right:20px;
+    color: black;
+}
+
+nav #contraste{
+    margin-right: 20px;
+    color: black;
+}
+
+.menu{
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #F2F3F4; */
+    font-size: 25px;
+    padding: 10px;
+    position: -webkit-sticky;
+	position: sticky;
+	top: 5px;
+    
+}
+
+#acceuil {
+    margin-left: 350px;
+}
+
+#a_propos{
+    margin-right: 350px;
+}
+
+.menu a{
+    border: solid;
+    border-radius: 30px;
+    padding: 7px;
+
+}
+
+.menu a:hover{
+    background-color: #1C2833;
+    color: white;
+    transition: 1s;
+}
+
+/* ------------------------------- navbar de navigation -------------------------------------------------------------------------*/
+
+#pre{
+    font-size: 70px;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-top: 20%;
+    color: white;
+}
+
+.parallax{
+    background-attachment: fixed; /* Fixe l'image pendant le scroll */
+    background-size: cover; /* L'image prendra 100% de l'espace, quitte à la crop */
+    background-position: center; /* Centre la position de l'image */
+    background-repeat: no-repeat; /* Empêche l'image de se répéter en fonction de la taille d'écran */
+    background-image: url(/ressource/diy.jpg);
+    height: 100vh;
+
+}
+
+#text_presentation{
+    color: black;
+    font-size: 30px;
+    text-align: center;
+    padding-top: 7%;
+    margin-left: auto;
+    margin-right: auto; 
+    width:50%;
+}
+
+
+
+/*-----------------------------------------------------footer----------------------------------------------------------------------*/
+
+footer{
+    margin-top: 5%;
+    background-color: #F2F3F4 ;
+}
+
+.footer{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
