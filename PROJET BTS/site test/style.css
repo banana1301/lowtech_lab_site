@@ -1,0 +1,21 @@
+.blue {
+color: blue;
+}
+
+.green {
+color: green;
+}
+
+.red {
+color: red;
+}
+
+img {
+width: 300px;
+height: auto;
+}
+
+button {
+margin-left: 100px;
+margin-top: 50px;
+}
