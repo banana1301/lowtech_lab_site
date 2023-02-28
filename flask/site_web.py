@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request
 import sqlite3 as sql
 
-app = Flask(__name__)
+app = Flask(__name__)  # création d'alias    
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+@app.route("/")        # premiére vue, quand l'url sera " / " la page afficher sera index.html
+def index():           # faire attention de ne pas avoir de doublon dans le nom de la fonction 
+    return render_template("index.html")   # retourne ver la page html 
 
 @app.route("/graphique")
 def graphique():
@@ -19,9 +19,9 @@ def connecter():
 def a_propos():
     return  render_template("a_propos.html")
 
-@app.route("/inscription")
-def inscription():
-    conn = sql.connect('database.db')
+@app.route("/inscription")    # pour la page de connection je vérifie que j'arrive a me connecter a la BDD
+def inscription():            # et je vérifie que la table existe
+    conn = sql.connect('database.db')  # connection a la base database.db
     print (conn)
     print("Connexion faite !!!")
     conn.execute('CREATE TABLE IF NOT EXISTS users(nom VARCHAR(255), prenom VARCHAR(255), email VARCHAR(255), mdp VARCHAR(255), date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP);')
