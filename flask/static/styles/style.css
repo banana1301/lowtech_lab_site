@@ -87,7 +87,7 @@ nav #contraste{
     background-size: cover; /* L'image prendra 100% de l'espace, quitte à la crop */
     background-position: center; /* Centre la position de l'image */
     background-repeat: no-repeat; /* Empêche l'image de se répéter en fonction de la taille d'écran */
-    background-image: url(/ressource/diy.jpg);
+    background-image: url(/../static/ressource/diy.jpg);
     height: 100vh;
 
 }
