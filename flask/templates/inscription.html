@@ -34,28 +34,21 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-
         <section class="formulaire">
             <!--Formulaire-->
-            <form action = "{{ url_for('addrec') }}" method="POST" id="inscription">
+            <form method="POST" id="inscription">
                 <h1>Inscription</h1>
-        
                 <div class="inputs">
-                    <input type="text" placeholder="Nom" name="nom" autocomplete="off" >
-                    <input type="text" placeholder="Prénom" name="prenom" autocomplete="off">
-                    <input type="email" placeholder="Email" name="email" autocomplete="off">
-                    <input type="password" placeholder="Mot de Passe" name="mdp" autocomplete="off">
-                    <input type="password" placeholder="Retaper mot de Passe" name="rmdp" autocomplete="off">
+                    {{ form.hidden_tag() }}
+                    {{ form.username }}
+                    {{ form.password }}
                 </div>
 
                 <div align="center">
-                    <button type="submit" name="envoi" >S'inscrire</button>
+                    {{ form.submit }}
                 </div>
-
             </form>
-        
         </section>
-
     </body>
 
 
