@@ -26,15 +26,16 @@
                 <h1>Se Connecter</h1>
         
                 <div class="inputs">
-                    <input type="email" placeholder="Email" name="email">
-                    <input type="password" placeholder="Mot de Passe" name="mdp">
+                    {{ form.hidden_tag() }}
+                    {{ form.username }}
+                    {{ form.password }}
                 </div>
 
                 <p class="inscription">Je n'ai pas de compte.<a href="/register"> Je m'en crée un.</a></p>
                 
                 
                 <div align="center">
-                    <button type="submit" name="envoi">Se connecter</button>
+                    {{ form.submit }}
                 </div>
 
             </form>
