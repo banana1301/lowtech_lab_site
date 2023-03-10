@@ -1,3 +1,4 @@
+#////////////////////////////IMPORTATION//////////////////////////////////
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -7,7 +8,9 @@ from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 import os
 from flask_migrate import Migrate
+#//////////////////////////////////////////////////////////////////////////
 
+#////////////////////////////////////CONNECTION BDD////////////////////////
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -17,6 +20,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 Migrate(app, db)
 print("migration")
+#//////////////////////////////////////////////////////////////////////////
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -61,6 +66,13 @@ class LoginForm(FlaskForm):
 def home():
     return render_template('index.html')
 
+@app.route('/graphique')
+def graphique():
+    return render_template('graphique.html')
+
+@app.route('/a_propos')
+def a_propos():
+    return render_template('a_propos.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,4 +114,4 @@ def register():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)

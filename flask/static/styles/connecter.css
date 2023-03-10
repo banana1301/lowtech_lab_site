@@ -100,7 +100,7 @@ form h1{
     flex-direction: column;
 }
 
-form .inputs input[type="email"],input[type="password"]{
+form .inputs input[type="email"],input[type="password"],input[type="text"] {
     padding: 15px;
     border-radius: 10px;
     border: none;
