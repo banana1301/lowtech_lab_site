@@ -21,21 +21,20 @@
 
         <section class="formulaire">
             <!--Formulaire-->
-            <form method="POST" id="connection">
+            <form action="{{ url_for('login') }}" method="POST" id="connection">
                 <h1>Se Connecter</h1>
         
                 <div class="inputs">
-                    {{ form.hidden_tag() }}
-                    {{ form.username }}
-                    {{ form.password }}
+                    <input type="email" name="email" placeholder="Email" id="Email" required>
+                    <input type="password" name="mdp" placeholder="Mot de passe" id="mdp" required>
+                    <div class="msg">{{ msg }}</div>
+                    <input type="submit" value="Se connecter">
                 </div>
 
                 <p class="inscription">Je n'ai pas de compte.<a href="/register"> Je m'en crée un.</a></p>
                 
                 
-                <div align="center">
-                    {{ form.submit }}
-                </div>
+
 
             </form>
         

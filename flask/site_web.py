@@ -1,66 +1,77 @@
 #////////////////////////////IMPORTATION//////////////////////////////////
-from flask import Flask, render_template, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, ValidationError
-from flask_bcrypt import Bcrypt
-import os
-from flask_migrate import Migrate
+from flask import Flask, render_template, url_for, redirect, request, session
+import re
+import sqlite3
 #//////////////////////////////////////////////////////////////////////////
-
-#////////////////////////////////////CONNECTION BDD////////////////////////
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
-app.config['SECRET_KEY'] = 'azerty'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-Migrate(app, db)
-print("migration")
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SECRET_KEY'] = '7z3V98deMEiYRfF2x4i9'
+#////////////////////////////////////CONNECTION BDD////////////////////////
+connection = sqlite3.connect('database.db',check_same_thread=False)
+curseur = connection.cursor()
 #//////////////////////////////////////////////////////////////////////////
 
+@app.route('/login',methods=['GET','POST'])
+def login():
+    # créer une variable pour stocker les erreur dedans par la suite
+    msg=''
+    # verifie que les champs sont remplie
+    if request.method == 'POST' and 'email' in request.form and 'mdp' in request.form:
+        # pour récupérer plus simplement 
+        email = request.form['email']
+        mdp = request.form['mdp']
+        hmdp=hash(mdp)
+        #chercher si le compte existe
+        curseur.execute("SELECT * FROM users WHERE email = '{}' AND mdp = '{}' ".format(email,hmdp))
+        # retourner les valeurs
+        account= curseur.fetchone()
+        print(account)
+        # SI le compte existe
+        if account:
+            # creer une session
+            session['loggedin'] = True
+            session['id'] = account [0]
+            session ['username'] = account [3]
+            return 'Connection réussi'
+        else: 
+            #Compte n'existe pas ou mdp pas correct
+            msg='Email ou Mot de passe INCORRECT'
+    return render_template('connecter.html',msg=msg)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+@app.route('/register', methods=['GET','POST'])
+def register():
+    msg=''
+    if request.method == 'POST' and 'email' in request.form and 'nom' in request.form and 'prenom' in request.form and 'mdp' in request.form:
+        email = request.form['email']
+        nom = request.form['nom']
+        prenom = request.form['prenom']
+        mdp = request.form['mdp']
+        hmdp=hash(mdp)
+        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
+        account= curseur.fetchone()
+        if account:
+            msg = 'Le compte existe déjà'
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Email invalide'
+        elif not nom or not prenom or not mdp or not email:
+            msg = 'Remplir le forulaire !'
+        else:
+            # Si le compte n'existe pas 
+            curseur.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}')".format(nom,prenom,email,hmdp))
+            connection.commit()
+            msg='Compte enregistrer'
+    elif request.method == 'POST':
+        #si le formulaire est vide
+        msg= "Remplir tous les champs !"
+    return render_template('inscription.html', msg=msg)
 
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
-
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
-
-
-class RegisterForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
-
-    password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-    submit = SubmitField('Register')
-
-    def validate_username(self, username):
-        existing_user_username = User.query.filter_by(
-            username=username.data).first()
-        if existing_user_username:
-            raise ValidationError(
-                'That username already exists. Please choose a different one.')
-
-
-class LoginForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
-
-    password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-    submit = SubmitField('Login')
-
+@app.route('/logout')
+def logout():
+    #supprimer les données de sessions
+    session.pop('loggedin',None)
+    session.pop('id',None)
+    session.pop('username',None)
+    return redirect(url_for('login'))
 
 @app.route('/')
 def home():
@@ -73,44 +84,6 @@ def graphique():
 @app.route('/a_propos')
 def a_propos():
     return render_template('a_propos.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for('dashboard'))
-    return render_template('connecter.html', form=form)
-
-
-@app.route('/dashboard', methods=['GET', 'POST'])
-@login_required
-def dashboard():
-    return render_template('dashboard.html')
-
-
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('login'))
-
-
-@ app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('login'))
-
-    return render_template('inscription.html', form=form)
 
 
 if __name__ == "__main__":

@@ -20,16 +20,16 @@
     <body>
         <section class="formulaire">
             <!--Formulaire-->
-            <form method="POST" id="inscription">
-                <h1>Inscription</h1>
+            <form action="{{ url_for('register') }}" method="POST" autocomplete="off" id="connection">
+                <h1>S'inscrire</h1>
+        
                 <div class="inputs">
-                    {{ form.hidden_tag() }}
-                    {{ form.username }}
-                    {{ form.password }}
-                </div>
-
-                <div align="center">
-                    {{ form.submit }}
+                    <input type="email" name="email" placeholder="Email" id="email" required>
+                    <input type="text" name="nom" placeholder="Nom" id="nom" required>
+                    <input type="text" name="prenom" placeholder="Prenom" id="prenom" required>
+                    <input type="password" name="mdp" placeholder="Mot de passe" id="mdp" required>
+                    <div class="msg">{{ msg }}</div>
+                    <input type="submit" value="Se connecter">
                 </div>
             </form>
         </section>
