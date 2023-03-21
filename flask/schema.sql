@@ -5,7 +5,15 @@ CREATE TABLE IF NOT EXISTS 'users' (
 	"prenom"	TEXT,
 	"email"	BLOB,
 	"mdp"	TEXT,
-	PRIMARY KEY("id")
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 -- INSERT INTO users (nom, prenom, email, mdp) VALUES ('testm', 'testl', 'test@test.com', 'azertyuiop');
+
+CREATE TABLE IF NOT EXISTS 'posts' (
+    "id" INTEGER NOT NULL,
+    "created" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "title" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);

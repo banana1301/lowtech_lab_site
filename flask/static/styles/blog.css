@@ -1,0 +1,94 @@
+*{
+    direction: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: black;
+    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Source Code Pro', monospace;
+    
+}
+
+header{
+    color: black;
+
+}
+
+.sigle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav h1{
+    font-size: 60px;
+    margin-right: 210px;
+}
+
+nav .icone{
+    font-size: 30px;
+}
+
+nav #daltonien{
+    margin-right:20px;
+    color: black;
+}
+
+nav #contraste{
+    margin-right: 20px;
+    color: black;
+}
+
+.menu{
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #F2F3F4; */
+    font-size: 25px;
+    padding: 10px;
+    position: -webkit-sticky;
+	position: sticky;
+	top: 5px;
+    
+}
+
+#acceuil {
+    margin-left: 350px;
+}
+
+#a_propos{
+    margin-right: 350px;
+}
+
+.menu a{
+    border: solid;
+    border-radius: 30px;
+    padding: 7px;
+
+}
+
+.menu a:hover{
+    background-color: #1C2833;
+    color: white;
+    transition: 1s;
+}
+
+/* ------------------------------- navbar de navigation -------------------------------------------------------------------------*/
+
+
+
+/*-----------------------------------------------------footer----------------------------------------------------------------------*/
+
+footer{
+    margin-top: 5%;
+    background-color: #F2F3F4 ;
+}
+
+.footer{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    bottom: 0;
+}

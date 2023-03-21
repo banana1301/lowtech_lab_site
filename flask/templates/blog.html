@@ -5,7 +5,7 @@
         <title>LowTech</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ url_for('static',filename='styles/inscription.css')}} ">
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/blog.css')}} ">
         <script src="https://kit.fontawesome.com/6d4b55bdfe.js" crossorigin="anonymous"></script>
         
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,28 +14,29 @@
     </head>
 
     <header>
+
         {% include "partials/_navbar.html" %}
+
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        <section class="formulaire">
-            <!--Formulaire-->
-            <form action="{{ url_for('register') }}" method="POST" autocomplete="off" id="connection">
-                <h1>S'inscrire</h1>
-        
-                <div class="inputs">
-                    <input type="email" name="email" placeholder="Email" id="email" required>
-                    <input type="text" name="nom" placeholder="Nom" id="nom" required>
-                    <input type="text" name="prenom" placeholder="Prenom" id="prenom" required>
-                    <input type="password" name="mdp" placeholder="Mot de passe" id="mdp" required>
-                    <div class="msg">{{ msg }}</div>
-                    <input type="submit" value="S'inscrire">
-                </div>
-            </form>
-        </section>
+        <div class="container">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% for post in posts %}
+                <a href="{{ url_for('post', post_id=post['id']) }}">
+                    <h2>{{ post['title'] }}</h2>
+                </a>
+                <span class="badge badge-primary">{{ post['created'] }}</span>
+                <a href="{{ url_for('edit', id=post['id']) }}">
+                    <span class="badge badge-warning">Edit</span>
+                </a>
+                <hr>
+            {% endfor %}
+        </div>
+
     </body>
-
-
 <!-- --------------------------------------------------footer------------------------------------------------------ -->
     <footer>
         {% include "partials/_footer.html" %}
