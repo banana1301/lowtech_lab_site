@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS 'users' (
 	"prenom"	TEXT,
 	"email"	BLOB,
 	"mdp"	TEXT,
+	"status"	TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 

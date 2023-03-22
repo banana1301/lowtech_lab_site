@@ -81,6 +81,9 @@ nav #contraste{
 footer{
     margin-top: 5%;
     background-color: #F2F3F4 ;
+    /* position:absolute;
+    bottom:0; 
+    width:100%;     */
 }
 
 .footer{
@@ -90,5 +93,4 @@ footer{
     margin-right: 5%;
     padding-top: 2%;
     padding-bottom: 2%;
-    bottom: 0;
 }

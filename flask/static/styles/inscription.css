@@ -80,7 +80,7 @@ nav #contraste{
     align-items: center;
 }
 
-#inscription{
+#connection{
     margin-top: 100px;
     background-color: #f2f2f2;
     padding-top: 40px;
@@ -109,6 +109,11 @@ form .inputs input[type="email"],input[type="password"],input[type="text"] {
 
 }
 
+form p.inscription{
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: #878787;
+}
 
 form button{
     padding: 15px 25px;
@@ -119,7 +124,6 @@ form button{
     cursor: pointer;
     outline: none;
 }
-
 
 /*-----------------------------------------------------footer----------------------------------------------------------------------*/
 

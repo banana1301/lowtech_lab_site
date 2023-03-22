@@ -4,6 +4,7 @@ import re
 import sqlite3
 from werkzeug.exceptions import abort
 from waitress import serve
+from werkzeug.security import generate_password_hash,check_password_hash
 #//////////////////////////////////////////////////////////////////////////
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -11,7 +12,7 @@ app.config['SECRET_KEY'] = '7z3V98deMEiYRfF2x4i9'
 #////////////////////////////////////CONNECTION BDD////////////////////////
 connection = sqlite3.connect('database.db',check_same_thread=False)
 curseur = connection.cursor()
-#//////////////////////////////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////////////////////LOGIN///////////////////////////////
 
 @app.route('/login',methods=['GET','POST'])
 def login():
@@ -22,24 +23,26 @@ def login():
         # pour récupérer plus simplement 
         email = request.form['email']
         mdp = request.form['mdp']
-        hmdp=hash(mdp)
         #chercher si le compte existe
-        curseur.execute("SELECT * FROM users WHERE email = '{}' AND mdp = '{}' ".format(email,hmdp))
+        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
         # retourner les valeurs
         account= curseur.fetchone()
-        print(account)
-        # SI le compte existe
-        if account:
-            # creer une session
-            session['loggedin'] = True
-            session['id'] = account [0]
-            session ['username'] = account [3]
-            return 'Connection réussi'
+        # print(account)
+        # print(account[4])
+        # print(check_password_hash(account[4],mdp))
+        if check_password_hash(account[4],mdp) == True:
+            # SI le compte existe
+            if account:
+                # creer une session
+                session['loggedin'] = True
+                session['id'] = account [0]
+                session ['username'] = account [3]
+                return redirect(url_for('blog'))
         else: 
             #Compte n'existe pas ou mdp pas correct
             msg='Email ou Mot de passe INCORRECT'
     return render_template('connecter.html',msg=msg)
-
+#//////////////////////////////////////////////////////////////////////////////////REGISTER///////////////////////////////////
 @app.route('/register', methods=['GET','POST'])
 def register():
     msg=''
@@ -48,7 +51,7 @@ def register():
         nom = request.form['nom']
         prenom = request.form['prenom']
         mdp = request.form['mdp']
-        hmdp=hash(mdp)
+        hmdp=generate_password_hash(mdp, method='pbkdf2:sha1', salt_length=8)
         curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
         account= curseur.fetchone()
         if account:
@@ -59,40 +62,47 @@ def register():
             msg = 'Remplir le forulaire !'
         else:
             # Si le compte n'existe pas 
-            curseur.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}')".format(nom,prenom,email,hmdp))
+            curseur.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}','{}')".format(nom,prenom,email,hmdp,'internaute'))
             connection.commit()
             msg='Compte enregistrer'
+            return redirect("login")
     elif request.method == 'POST':
         #si le formulaire est vide
         msg= "Remplir tous les champs !"
     return render_template('inscription.html', msg=msg)
-
+#//////////////////////////////////////////////////////////////////////////////////////LOGOUT//////////////////////
 @app.route('/logout')
 def logout():
     #supprimer les données de sessions
     session.pop('loggedin',None)
     session.pop('id',None)
     session.pop('username',None)
+    session.clear()
+    print("session supprimer")
     return redirect(url_for('login'))
-
+#///////////////////////////////////////////////////////////////////////////////////////HOME///////////////////////////
 @app.route('/')
 def home():
     return render_template('index.html')
-
+#//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
     return render_template('graphique.html')
-
+#//////////////////////////////////////////////////////////////////////////////////////////A PROPOS/////////////////
 @app.route('/a_propos')
 def a_propos():
     return render_template('a_propos.html')
-
+#/////////////////////////////////////////////////////////////////////////////////////////////BLOG//////////////////////////
 @app.route('/blog')
 def blog():
-    conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    return render_template('blog.html', posts=posts)
+    print(session.get('username',False))
+    if session.get('username',False):
+        conn = get_db_connection()
+        posts = conn.execute('SELECT * FROM posts').fetchall()
+        conn.close()
+        return render_template('blog.html', posts=posts)
+    else:
+        return redirect(url_for('login'))
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -107,7 +117,7 @@ def get_post(post_id):
     if post is None:
         abort(404)
     return post
-
+#///////////////////////////////////////////////////////////////////////////////////////////////CREATE////////////////////////
 @app.route('/create', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -123,12 +133,12 @@ def create():
             conn.close()
             return redirect(url_for('blog'))
     return render_template('create.html')
-
+#/////////////////////////////////////////////////////////////////////////////////////////////////POST////////////////
 @app.route('/<int:post_id>')
 def post(post_id):
     post = get_post(post_id)
     return render_template('post.html', post=post)
-
+#////////////////////////////////////////////////////////////////////////////////////////////////EDIT/////////////////
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
     post = get_post(id)
@@ -142,14 +152,14 @@ def edit(id):
         else:
             conn = get_db_connection()
             conn.execute('UPDATE posts SET title = ?, content = ?'
-                         ' WHERE id = ?',
-                         (title, content, id))
+                        ' WHERE id = ?',
+                        (title, content, id))
             conn.commit()
             conn.close()
             return redirect(url_for('blog'))
 
     return render_template('edit.html', post=post)
-
+#//////////////////////////////////////////////////////////////////////////////////////////DELETE//////////////////////
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
     post = get_post(id)
@@ -159,6 +169,11 @@ def delete(id):
     conn.close()
     flash('"{}" was successfully deleted!'.format(post['title']))
     return redirect(url_for('blog'))
+#//////////////////////////////////////////////////////////////////////////////////////////TEST//////////////////////
+@app.route('/test')
+def get():
+    # return session.get('username','not set')
+    return render_template('test.html')
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)

@@ -1,3 +1,4 @@
+# programme qui permet de créer la BDD avec les tables
 import sqlite3
 
 connection = sqlite3.connect('database.db')
