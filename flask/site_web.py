@@ -12,6 +12,21 @@ app.config['SECRET_KEY'] = '7z3V98deMEiYRfF2x4i9'
 #////////////////////////////////////CONNECTION BDD////////////////////////
 connection = sqlite3.connect('database.db',check_same_thread=False)
 curseur = connection.cursor()
+
+
+def get_db_connection():
+    conn = sqlite3.connect('database.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+def get_post(post_id):
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM posts WHERE id = ?',
+                        (post_id,)).fetchone()
+    conn.close()
+    if post is None:
+        abort(404)
+    return post
 #////////////////////////////////////////////////////////////////////////////////LOGIN///////////////////////////////
 
 @app.route('/login',methods=['GET','POST'])
@@ -30,9 +45,9 @@ def login():
         # print(account)
         # print(account[4])
         # print(check_password_hash(account[4],mdp))
-        if check_password_hash(account[4],mdp) == True:
-            # SI le compte existe
-            if account:
+        if account :
+            if check_password_hash(account[4],mdp) == True:
+                # SI le compte existe
                 # creer une session
                 session['loggedin'] = True
                 session['id'] = account [0]
@@ -95,44 +110,41 @@ def a_propos():
 #/////////////////////////////////////////////////////////////////////////////////////////////BLOG//////////////////////////
 @app.route('/blog')
 def blog():
-    print(session.get('username',False))
-    if session.get('username',False):
+    # print(session.get('username',False))
+    # if session.get('username',False):
         conn = get_db_connection()
         posts = conn.execute('SELECT * FROM posts').fetchall()
         conn.close()
         return render_template('blog.html', posts=posts)
-    else:
-        return redirect(url_for('login'))
+    # else:
+    #     return redirect(url_for('login'))
 
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
 
-def get_post(post_id):
-    conn = get_db_connection()
-    post = conn.execute('SELECT * FROM posts WHERE id = ?',
-                        (post_id,)).fetchone()
-    conn.close()
-    if post is None:
-        abort(404)
-    return post
 #///////////////////////////////////////////////////////////////////////////////////////////////CREATE////////////////////////
 @app.route('/create', methods=('GET', 'POST'))
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
+    if session.get('username',False):
+        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur.fetchone()
+        print(account)
+        if account[5]=='admin':
+            if request.method == 'POST':
+                title = request.form['title']
+                content = request.form['content']
 
-        if not title:
-            flash('Title is required!')
+                if not title:
+                    flash('Titre requie!')
+                else:
+                    conn = get_db_connection()
+                    conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)',(title, content))
+                    conn.commit()
+                    conn.close()
+                    return redirect(url_for('blog'))
+            return render_template('create.html')
         else:
-            conn = get_db_connection()
-            conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)',(title, content))
-            conn.commit()
-            conn.close()
             return redirect(url_for('blog'))
-    return render_template('create.html')
+    else:
+        return redirect(url_for('login'))
 #/////////////////////////////////////////////////////////////////////////////////////////////////POST////////////////
 @app.route('/<int:post_id>')
 def post(post_id):
@@ -148,7 +160,7 @@ def edit(id):
         content = request.form['content']
 
         if not title:
-            flash('Title is required!')
+            flash('Titre requit !')
         else:
             conn = get_db_connection()
             conn.execute('UPDATE posts SET title = ?, content = ?'
@@ -167,17 +179,23 @@ def delete(id):
     conn.execute('DELETE FROM posts WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('"{}" was successfully deleted!'.format(post['title']))
+    flash('"{}" Supprimer avec succes !'.format(post['title']))
     return redirect(url_for('blog'))
 #//////////////////////////////////////////////////////////////////////////////////////////TEST//////////////////////
 @app.route('/test')
 def get():
-    # return session.get('username','not set')
-    return render_template('test.html')
+    return session.get('username','not set')
+    #return render_template('test.html')
+
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
-    print("Adresse du site: http://127.0.0.0:5000")
+    print("Adresse du site: http://127.0.0.1:5000")
     print("Le site et accessible depuis son ip local aussi.")
     print("En cours d'exécution...")
     serve(app, host='0.0.0.0', port= 5000)
+    
+    
+    
+#@login_required
+#flash

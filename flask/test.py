@@ -24,10 +24,24 @@
 # connection.commit()
 # connection.close()
 
-from werkzeug.security import generate_password_hash,check_password_hash
-mdp="a"
+# from werkzeug.security import generate_password_hash,check_password_hash
+# mdp="a"
 
-hmdp=(generate_password_hash(mdp, method='pbkdf2:sha1', salt_length=8))
-print(hmdp)
+# hmdp=(generate_password_hash(mdp, method='pbkdf2:sha1', salt_length=8))
+# print(hmdp)
 
-print(check_password_hash(hmdp,"a"))
+# print(check_password_hash(hmdp,"a"))
+
+from jinja2 import Template
+
+template="""
+        <h1>1</h1>
+        <h1>1</h1>
+        <h1>1</h1>
+        <h1>1</h1>
+        <h1>1</h1>
+        <h1>1</h1>
+        <h1>1</h1>
+"""
+
+print(template.render)
