@@ -18,3 +18,12 @@ CREATE TABLE IF NOT EXISTS 'posts' (
     "content" TEXT NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
+
+
+CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
+	"date_jour"	DATETIME,
+	"Tension"	float,
+	"Courant"	float,
+	"Puissance"	float,
+	"Pourcentage_BAT"	INTEGER
+);

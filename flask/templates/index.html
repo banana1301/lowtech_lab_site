@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="CONTENU">
 
     <head>
         <title>LowTech</title>
@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css')}} ">
         <script src="https://kit.fontawesome.com/6d4b55bdfe.js" crossorigin="anonymous"></script>
-        
+
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Source+Code+Pro&display=swap" rel="stylesheet">
@@ -20,11 +20,11 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        
+
         <div class="parallax">
             <h1 id="pre">Présentation</h1>
         </div>
-        
+
         <p id="text_presentation">
             Le DIY, ou "Do It Yourself", est un mouvement qui consiste à réaliser soi-même des projets plutôt 
             que de les acheter tout faits. Il peut s'agir de bricolage, de couture, de jardinage, de cuisine, etc. 
@@ -41,7 +41,7 @@
             tout âge. Il suffit de se lancer !
         </p>
 
-
+        {% include "partials/_pastille_site.html" %}
     </body>
 <!-- --------------------------------------------------footer------------------------------------------------------ -->
     <footer>
