@@ -5,7 +5,7 @@
         <title>LowTech</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{{ url_for('static',filename='styles/blog.css')}} ">
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/post.css')}} ">
         <script src="https://kit.fontawesome.com/6d4b55bdfe.js" crossorigin="anonymous"></script>
         
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,13 +20,13 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        <div class="container">
+        <div class="blog">
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
             <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
             <span class="badge badge-primary">{{ post['created'] }}</span>
-            <p>{{ post['content'] }}</p>
+            <p id="paragraphe">{{ post['content'] }}</p>
         </div>
     </body>
 <!-- --------------------------------------------------footer------------------------------------------------------ -->

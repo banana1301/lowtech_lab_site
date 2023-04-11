@@ -1,0 +1,8 @@
+flask
+re
+sqlite3
+werkzeug.exceptions
+waitress
+werkzeug.security
+werkzeug.utils
+psutil

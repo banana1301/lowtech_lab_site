@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS 'posts' (
     "created" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+	"miniature"	TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
@@ -26,4 +27,10 @@ CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
 	"Courant"	float,
 	"Puissance"	float,
 	"Pourcentage_BAT"	INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS 'monitoring' (
+	"cpu"	INTEGER,
+	"mem"	INTEGER,
+	"reseaux"	INTEGER
 );

@@ -74,6 +74,71 @@ nav #contraste{
 
 /* ------------------------------- navbar de navigation -------------------------------------------------------------------------*/
 
+/*-----------------------------------btn dalto-----------------------------------------------*/
+
+
+
+#CONTENU {
+    filter: url(#myFilter);
+}
+
+.dropdown {
+    position: relative;
+
+}
+
+.dropdown-button {
+    cursor: pointer;
+}
+
+.dropdown select {
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#colorFilterSelect {
+    position: relative ;
+    top: 100%;
+    left: -100px;
+    width: 35px;
+    height: 35px;
+    background-color: #fff;
+    border: 0px solid #fff;
+    z-index: 1;
+    font-size: 0px;
+    background-image: url('/static/ressource/oeil.svg');
+    background-size: 35px 35px;
+}
+
+#colorFilterSelect option {
+    font-size: 16px;
+}
+
+.dropdown-button:hover {
+    opacity: 0.8;
+}
+
+.dropdown:hover #colorFilterSelect {
+    display: block;
+}
+
+.dropdown #colorFilterSelect:focus {
+    display: block;
+}
+
+.dropdown-arrow {
+    display: none;
+
+}
+
+.select-dropdown {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+/*-----------------------------------btn dalto-----------------------------------------------*/
 
 
 /*-----------------------------------------------------footer----------------------------------------------------------------------*/

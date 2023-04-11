@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="CONTENU">
 
     <head>
         <title>LowTech</title>
@@ -20,29 +20,33 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        
 
-        <div class="container">
+        <div class="blog">
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-
+            
             <a href="create">Ecrire un article ? (Autorisation particulière nécessaire)</a>
             <br>
             <br>
-
-            {% for post in posts %}
-                <a href="{{ url_for('post', post_id=post['id']) }}">
-                    <h2>{{ post['title'] }}</h2>
-                </a>
-                
-                <span class="badge badge-primary">{{ post['created'] }}</span>
-                <a href="{{ url_for('edit', id=post['id']) }}">
-                    <span class="badge badge-warning">Edit</span>
-                </a>
-            {% endfor %}
+            <div class="articles">
+                {% for post in posts %} 
+                    <div class="article">
+                        <a href="{{ url_for('post', post_id=post['id']) }}">
+                            <img src={{ post['miniature']}} class="img-post">
+                            <h2 id="titre">{{ post['title'] }}</h2>
+                        </a>
+                        <br>
+                        <div class="article-header">
+                            <span class="badge badge-primary">{{ post['created'] }}</span>
+                            <a href="{{ url_for('edit', id=post['id']) }}">
+                                <span class="badge badge-warning">Edit</span>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-
     </body>
 <!-- --------------------------------------------------footer------------------------------------------------------ -->
     <footer>

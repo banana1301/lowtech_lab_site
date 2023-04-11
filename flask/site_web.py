@@ -5,6 +5,11 @@ import sqlite3
 from werkzeug.exceptions import abort
 from waitress import serve
 from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.utils import secure_filename
+import os
+import time
+import threading
+import psutil
 #//////////////////////////////////////////////////////////////////////////
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -12,7 +17,6 @@ app.config['SECRET_KEY'] = '7z3V98deMEiYRfF2x4i9'
 #////////////////////////////////////CONNECTION BDD////////////////////////
 connection = sqlite3.connect('database.db',check_same_thread=False)
 curseur = connection.cursor()
-
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -119,6 +123,9 @@ def home():
 @app.route('/graphique')
 def graphique():
     return render_template('graphique.html')
+
+
+
 #//////////////////////////////////////////////////////////////////////////////////////////A PROPOS/////////////////
 @app.route('/a_propos')
 def a_propos():
@@ -128,10 +135,10 @@ def a_propos():
 def blog():
     # print(session.get('username',False))
     # if session.get('username',False):
-        conn = get_db_connection()
-        posts = conn.execute('SELECT * FROM posts').fetchall()
-        conn.close()
-        return render_template('blog.html', posts=posts)
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM posts').fetchall()
+    conn.close()
+    return render_template('blog.html', posts=posts)
     # else:
     #     return redirect(url_for('login'))
 
@@ -147,12 +154,17 @@ def create():
             if request.method == 'POST':
                 title = request.form['title']
                 content = request.form['content']
+                miniature = request.files['miniature']
+                # annexe = request.files['annexe']
 
                 if not title:
                     flash('Titre requie!')
                 else:
+                    filename = secure_filename("miniature."+title+".png")
+                    emplacement="/static/photos/miniature/" + filename
+                    miniature.save('./static/photos/miniature/' + filename)
                     conn = get_db_connection()
-                    conn.execute('INSERT INTO posts (title, content) VALUES (?, ?)',(title, content))
+                    conn.execute('INSERT INTO posts (title, content, miniature) VALUES (?,?,?)',(title, content,emplacement))
                     conn.commit()
                     conn.close()
                     return redirect(url_for('blog'))
@@ -204,14 +216,35 @@ def get():
     #return render_template('test.html')
 
 
+#//////////////////////////////////////////////////////////////////////////TEST2//////////
+# upload_folder = os.path.join('static', 'photos/miniature/')
+# app.config['UPLOAD'] = upload_folder
+
+
+def test():
+    while True:
+        total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+        mem= round((used_memory/total_memory) * 100, 2)
+        cpuload = psutil.cpu_percent(interval=1)
+        
+        print(mem)
+        print(cpuload)
+        
+        conn = get_db_connection()
+        conn.execute('INSERT INTO monitoring (cpu, mem) VALUES (?,?)',(cpuload, mem))
+        conn.commit()
+
+
+
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
+    t1 = threading.Thread(target=test)
+    t1.start()
+
     print("Adresse du site: http://127.0.0.1:5000")
     print("Le site et accessible depuis son ip local aussi.")
     print("En cours d'exécution...")
     serve(app, host='0.0.0.0', port= 5000)
-    
-    
-    
+
 #@login_required
 #flash

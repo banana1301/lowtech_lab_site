@@ -20,25 +20,36 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        <div class="container">
+        <div class="create">
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" name="title"
-                            placeholder="Post title" class="form-control"
-                            value="{{ request.form['title'] }}"></input>
+                    <label for="title">Titre</label>
+                    <br>
+                    <input type="text" name="title" size="50"
+                            placeholder="Entrer le titre" class="form-control"
+                            value="{{ request.form['title'] }}">
+                </div>
+                <div>
+                    <label for="profile_pic">Sélectionnez une photo pour la miniature. </label>
+                    <input type="file" id="miniature" name="miniature" accept=".jpg, .jpeg, .png" value="{{ request.form['miniature'] }}">
                 </div>
             
-                <div class="form-group">
-                    <label for="content">Content</label>
-                    <textarea name="content" placeholder="Post content"
-                                class="form-control">{{ request.form['content'] }}</textarea>
+                <div>
+                    <br>
+                    <br>
+                    <br>
+                    <label for="content">Contenue</label>
+                    <br>
+                    <textarea name="content" placeholder="Entrer le contenue" rows="25" cols="150" class="form-control">{{ request.form['content'] }}</textarea>
+                    <br>
+                    <!-- <input type="file" id="annexe" name="annexe" accept=".jpg, .jpeg, .png, .zip, .rar" value="{{ request.form['annexe'] }}" multiple="multiple"> -->
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <div>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Publier</button>
                 </div>
             </form>
         </div>
