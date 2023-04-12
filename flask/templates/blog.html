@@ -26,7 +26,10 @@
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
             
+            {% if autorisation %}
             <a href="create">Ecrire un article ? (Autorisation particulière nécessaire)</a>
+            {% endif%}
+            
             <br>
             <br>
             <div class="articles">
@@ -39,9 +42,12 @@
                         <br>
                         <div class="article-header">
                             <span class="badge badge-primary">{{ post['created'] }}</span>
+                            
+                            {% if autorisation %}
                             <a href="{{ url_for('edit', id=post['id']) }}">
                                 <span class="badge badge-warning">Edit</span>
                             </a>
+                            {% endif%}
                         </div>
                     </div>
                 {% endfor %}

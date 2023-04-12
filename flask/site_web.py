@@ -150,14 +150,17 @@ def a_propos():
 #/////////////////////////////////////////////////////////////////////////////////////////////BLOG//////////////////////////
 @app.route('/blog')
 def blog():
-    # print(session.get('username',False))
-    # if session.get('username',False):
+    autorisation = False
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    return render_template('blog.html', posts=posts)
-    # else:
-    #     return redirect(url_for('login'))
+    try:
+        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur.fetchone()
+        print (account[5])
+        if account[5]=='admin':
+            autorisation = True
+    finally:
+        return render_template('blog.html', posts=posts, autorisation = autorisation)
 
 
 #///////////////////////////////////////////////////////////////////////////////////////////////CREATE////////////////////////
@@ -198,24 +201,28 @@ def post(post_id):
 #////////////////////////////////////////////////////////////////////////////////////////////////EDIT/////////////////
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
-    post = get_post(id)
-
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-
-        if not title:
-            flash('Titre requit !')
-        else:
-            conn = get_db_connection()
-            conn.execute('UPDATE posts SET title = ?, content = ?'
-                        ' WHERE id = ?',
-                        (title, content, id))
-            conn.commit()
-            conn.close()
-            return redirect(url_for('blog'))
-
-    return render_template('edit.html', post=post)
+    try:
+        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur.fetchone()
+        print(account)
+        if account[5]=='admin':
+            post = get_post(id)
+            if request.method == 'POST':
+                title = request.form['title']
+                content = request.form['content']
+                if not title:
+                    flash('Titre requit !')
+                else:
+                    conn = get_db_connection()
+                    conn.execute('UPDATE posts SET title = ?, content = ?'
+                                ' WHERE id = ?',
+                                (title, content, id))
+                    conn.commit()
+                    conn.close()
+                    return redirect(url_for('blog'))
+            return render_template('edit.html', post=post)
+    except:
+        return redirect(url_for('login'))
 #//////////////////////////////////////////////////////////////////////////////////////////DELETE//////////////////////
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):

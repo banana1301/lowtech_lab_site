@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
 	"Tension"	float,
 	"Courant"	float,
 	"Puissance"	float,
-	"Pourcentage_BAT"	INTEGER
+	"Pourcentage_BAT"	INTEGER,
+	"Luminosite"	INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS 'monitoring' (
