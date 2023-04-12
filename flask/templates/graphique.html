@@ -5,10 +5,12 @@
       google.charts.load('current', {'packages':['gauge']});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
+        var mem = "{{ mem }}";
+        var cpuload = "{{ cpuload }}"
         var data = google.visualization.arrayToDataTable([
           ['Label', 'Value'],
-          ['Mémoire', 100],
-          ['Processeur', 100],
+          ['Mémoire', parseInt(mem)],
+          ['Processeur', parseInt(cpuload)],
           ['Network', 100]
         ]);
         var options = {

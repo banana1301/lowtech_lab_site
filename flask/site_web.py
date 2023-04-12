@@ -1,5 +1,6 @@
 #////////////////////////////IMPORTATION//////////////////////////////////
 from flask import Flask, render_template, url_for, redirect, request, session,flash
+import threading
 import re
 import sqlite3
 from werkzeug.exceptions import abort
@@ -8,7 +9,6 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from werkzeug.utils import secure_filename
 import os
 import time
-import threading
 import psutil
 #//////////////////////////////////////////////////////////////////////////
 app = Flask(__name__)
@@ -31,6 +31,16 @@ def get_post(post_id):
     if post is None:
         abort(404)
     return post
+
+
+def test():
+    while True:
+        total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
+        mem=round((used_memory/total_memory) * 100, 2)
+        cpuload = psutil.cpu_percent(interval=1)
+        curseur.execute('INSERT INTO monitoring (cpu, mem) VALUES (?,?)',(cpuload, mem))
+        connection.commit()
+        time.sleep(2)
 #////////////////////////////////////////////////////////////////////////////////LOGIN///////////////////////////////
 
 @app.route('/login',methods=['GET','POST'])
@@ -122,7 +132,14 @@ def home():
 #//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
-    return render_template('graphique.html')
+    cpu = curseur.execute('SELECT cpu from monitoring;').fetchall()
+    mem = curseur.execute('SELECT mem from monitoring;').fetchall()
+    cpu1= list(cpu[-1])
+    print(list(cpu[-1]))
+    
+    mem1 = list(mem[-1])
+    print(list(mem[-1]))
+    return render_template('graphique.html',mem = mem1[0], cpuload = cpu1[0])
 
 
 
@@ -221,25 +238,11 @@ def get():
 # app.config['UPLOAD'] = upload_folder
 
 
-def test():
-    while True:
-        total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
-        mem= round((used_memory/total_memory) * 100, 2)
-        cpuload = psutil.cpu_percent(interval=1)
-        
-        print(mem)
-        print(cpuload)
-        
-        conn = get_db_connection()
-        conn.execute('INSERT INTO monitoring (cpu, mem) VALUES (?,?)',(cpuload, mem))
-        conn.commit()
-
-
-
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
-    t1 = threading.Thread(target=test)
-    t1.start()
+    with app.app_context():
+        t1 = threading.Thread(target=test)
+        t1.start()
 
     print("Adresse du site: http://127.0.0.1:5000")
     print("Le site et accessible depuis son ip local aussi.")
