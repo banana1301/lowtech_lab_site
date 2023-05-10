@@ -1,5 +1,8 @@
 <html>
   <head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/graphique.css')}} ">
+    
+    <!-- graphique rond  -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['gauge']});
@@ -21,9 +24,10 @@
         var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
-
     </script>
-    <link rel="stylesheet" href="{{ url_for('static',filename='styles/graphique.css')}} ">
+    <!-- FIN graphique rond  -->
+    
+    
   </head>
 
   <header>
@@ -31,9 +35,19 @@
   </header>
 
   <body>
-    <br>
-    <br>
     <div id="chart_div" style="width: 400px; height: 120px;"></div>
+    
+    <div class="graph">
+      <div id="graph_bat">
+        <h1>Pourcentage de charge de la batterrie</h1>
+        <img src="{{ url_for('static', filename='ressource/graph/graph_bat.png') }}">
+      </div>
+
+      <div id="graph_courant">
+        <h1>Messure du courant</h1>
+        <img src="{{ url_for('static', filename='ressource/graph/graph_courant.png') }}">
+      </div>
+    </div>
   </body>
 
   <footer>

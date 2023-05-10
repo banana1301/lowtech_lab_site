@@ -1,8 +1,6 @@
-# import sqlite3
-
-# connection = sqlite3.connect('database.db')
-
-# cur = connection.cursor()
+import sqlite3
+connection = sqlite3.connect('database.db')
+cur = connection.cursor()
 
 # # cur.execute("INSERT INTO posts (title, content) VALUES (?, ?)",
 # #             ('First Post', 'Content for the first post')
@@ -59,8 +57,21 @@
 
 #mwrn qzku wgal fdvf
 
-print('"test"')
+# import sqlite3
+# connection = sqlite3.connect('database.db')
+# curseur = connection.cursor()
 
-test1= '"test"'
+# curseur.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;')
+# ligne1 = curseur.fetchall()
+# print("ligne 1 -->",ligne1)
 
-print(test1)
+# liste = [x[0] for x in ligne1]
+# print("liste -->", liste)
+
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')

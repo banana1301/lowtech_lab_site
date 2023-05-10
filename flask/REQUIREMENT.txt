@@ -6,3 +6,4 @@ waitress
 werkzeug.security
 werkzeug.utils
 psutil
+matplotlib

@@ -10,6 +10,10 @@ from werkzeug.utils import secure_filename
 import os
 import time
 import psutil
+import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter, DayLocator
+import matplotlib.dates as dt
+import datetime as dt
 #//////////////////////////////////////////////////////////////////////////
 app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -132,13 +136,52 @@ def home():
 #//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
+    
+    fig1, ax1 = plt.subplots()
+    fig2, ax2 = plt.subplots()
+
     cpu = curseur.execute('SELECT cpu from monitoring;').fetchall()
     mem = curseur.execute('SELECT mem from monitoring;').fetchall()
     cpu1= list(cpu[-1])
-    print(list(cpu[-1]))
-    
     mem1 = list(mem[-1])
-    print(list(mem[-1]))
+    
+    pourcent_bat = curseur.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;').fetchall()
+    pourcent_bat1 = []
+    for i in range(5):
+        pourcent_bat1.append(list(pourcent_bat[-1 - i]))
+    print(pourcent_bat1)
+    
+    date = curseur.execute('SELECT date_jour from VALEURS_CAPTEURS;').fetchall()
+    date1 = []
+    for i in range (5):
+        date1.append(list(date[-1 - i]))
+    date_liste = [x[0] for x in date1]
+    print("c'est la date ---->",date_liste)
+    
+    x = [dt.datetime.strptime(d,'%Y-%m-%d %H:%M:%S').date() for d in date_liste]
+    y = pourcent_bat1
+    
+    ax1.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax1.xaxis.set_major_locator(DayLocator())
+    ax1.plot(x,y)
+    fig1.autofmt_xdate()
+    fig1.savefig('static/ressource/graph/graph_bat.png')
+    
+    courant = curseur.execute('SELECT Courant from VALEURS_CAPTEURS;').fetchall()
+    courant1 = []
+    for i in range(5):
+        courant1.append(list(courant[-1 - i]))
+    courant_liste = [x[0] for x in courant1]
+    print("C'est le courant -->",courant1)
+    
+    y2 = courant_liste
+    
+    ax2.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
+    ax2.xaxis.set_major_locator(DayLocator())
+    ax2.plot(x,y2)
+    fig2.autofmt_xdate()
+    fig2.savefig('static/ressource/graph/graph_courant.png')
+    
     return render_template('graphique.html',mem = mem1[0], cpuload = cpu1[0])
 
 
@@ -255,6 +298,4 @@ if __name__ == "__main__":
     print("Le site et accessible depuis son ip local aussi.")
     print("En cours d'exécution...")
     serve(app, host='0.0.0.0', port= 5000)
-
-#@login_required
-#flash
+    

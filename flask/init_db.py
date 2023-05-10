@@ -1,10 +1,11 @@
-# programme qui permet de créer la BDD avec les tables
-import sqlite3
+# programme qui permet d'initialiser la BDD avec les tables
 
-connection = sqlite3.connect('database.db')
+import sqlite3 # importation de la bibliothéque sqlite3
 
-with open('schema.sql') as f:
-    connection.executescript(f.read())
+connection = sqlite3.connect('database.db') # connection a la base database.db
+
+with open('schema.sql') as f: # lecture du fichier schema.sql
+    connection.executescript(f.read()) # exécution des commandes
     
 connection.commit()
 connection.close()

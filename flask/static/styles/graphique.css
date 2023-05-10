@@ -143,9 +143,23 @@ nav #contraste{
 #chart_div{
     margin-left: auto;
     margin-right: auto;
+    margin-top: 2%;
+}
+
+.graph{
+    display: flex;
+    justify-content: space-between;
 }
 
 
+#graph_bat{
+    margin-top: 4%;
+    margin-left: 2%;
+}
+
+#graph_courant{
+    margin-top: 4%;
+}
 
 
 /*-----------------------------------------------------footer----------------------------------------------------------------------*/
