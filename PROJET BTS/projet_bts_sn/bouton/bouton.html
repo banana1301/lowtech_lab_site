@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bouton scroll</title>
+</head>
+<body>
+    <button onclick="showMenu()"><img src="Logo_oeil.png" id="IMG_BTN"></button>
+    <select id="colorFilterSelect">
+        <option>Vision couleur</option>
+        <option>Protanopie</option>
+        <option>protanomalie</option>
+        <option>deutéranopie</option>
+        <option>deutranomalie</option>
+        <option>tritanopie</option>
+        <option>tritanomalie</option>
+        <option>achromatopsie</option>
+        <option>achromatomalie</option>
+    </select>
+
+    <style>
+        #IMG_BTN{
+            width:20px;
+            height:20px;
+        }
+        #colorFilterSelect {
+            display: none;
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 150px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            z-index: 1;
+        }
+        #colorFilterSelect option {
+            display: block;
+            padding: 5px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+
+    <script>
+        function showMenu() {
+            var colorFilterSelect = document.getElementById("colorFilterSelect");
+            if (colorFilterSelect.style.display === "block") {
+                colorFilterSelect.style.display = "none";
+            } else {
+                colorFilterSelect.style.display = "block";
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>LowTech</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css')}} ">
+        <script src="https://kit.fontawesome.com/6d4b55bdfe.js" crossorigin="anonymous"></script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    </head>
+
+    <header>
+
+        {% include "partials/_navbar.html" %}
+
+    </header>
+<!-- --------------------------------------------------navbar------------------------------------------------------------- -->
+    <body>
+
+        <div class="parallax">
+            <h1 id="pre">Présentation</h1>
+        </div>
+
+        <p id="text_presentation">
+            Le DIY, ou "Do It Yourself", est un mouvement qui consiste à réaliser soi-même des projets plutôt 
+            que de les acheter tout faits. Il peut s'agir de bricolage, de couture, de jardinage, de cuisine, etc. 
+            Le DIY permet de personnaliser les objets de la vie quotidienne, de réaliser des économies, et de se sentir 
+            fier de ses créations. Il existe de nombreux tutoriels en ligne pour apprendre à réaliser des projets DIY, 
+            que ce soit pour des décorations, des meubles, ou même des vêtements. Les réseaux sociaux regorgent de comptes 
+            dédiés au DIY, où l'on peut trouver des idées, des conseils et des astuces. Le DIY est également un excellent 
+            moyen de se divertir, de se détendre et de se créer de nouveaux défis. Il permet de découvrir de nouvelles 
+            techniques, de nouveaux matériaux et de nouveaux outils. Il est 
+            également un excellent moyen de se connecter avec les autres, en organisant des ateliers DIY entre amis 
+            ou en participant à des communautés en ligne dédiées. En somme, le DIY est un mouvement créatif et 
+            ludique qui permet de donner vie à ses idées, de personnaliser son quotidien et de se connecter avec 
+            les autres. Il est accessible à tous, quel que soit son niveau de compétence, et il peut être pratiqué à 
+            tout âge. Il suffit de se lancer !
+        </p>
+
+        {% include "partials/_pastille_site.html" %}
+    </body>
+<!-- --------------------------------------------------footer------------------------------------------------------ -->
+    <footer>
+        {% include "partials/_footer.html" %}
+    </footer>
+
+</html>

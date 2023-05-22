@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Batterie Status</title>
+  </head>
+  <style>
+  .bottomright {
+  position: fixed;
+  right: 0px; bottom: 0px;
+  width: 200px;
+  height:40px;
+  background-color: transparent;
+  padding: 5px;
+}
+  </style>
+  <body>
+  <div>
+    <div>
+      petit text aeaeaeaeaeaeaeaeaeae
+    </div>
+    <div>
+      petit text aeaeaeaeaeaeaeaeaeae
+    </div>
+    <div>
+      petit text aeaeaeaeaeaeaeaeaeae
+    </div>
+    <div>
+      petit text aeaeaeaeaeaeaeaeaeae
+    </div>
+    <div>
+      petit text aeaeaeaeaeaeaeaeaeae
+    </div>
+  </div>
+
+    <div class="bottomright">
+      <img id="battery-image" src="" width="30" height="30">
+    </div>
+
+    <script>
+      var pourcent_battery_recupere = { pourcent_battery_recupere };
+      var batteryImg = document.getElementById("battery-image");
+
+      if (pourcent_battery_recupere >= 80) {
+          batteryImg.src = "high.png";
+      } else if (pourcent_battery_recupere >= 40 && pourcent_battery_recupere < 80) {
+          batteryImg.src = "medium.png";
+      } else {
+          batteryImg.src = "low.png";
+      }
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<style>
+
+body {
+  filter: url(#noFilterColourMatrix);
+}
+
+img {
+width: 300px;
+height: auto;
+}
+
+.blue {
+color: blue;
+}
+
+.green {
+color: green;
+}
+
+.red {
+color: red;
+}
+
+.cb-demo label {
+  background-color: #eee;
+  color: #000;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 5px;
+  padding: 0 .5em;
+}
+.cb-demo input {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+}
+.cb-demo input:checked + label {
+  font-weight: bold;
+}
+
+.cb-demo #noFilter:checked ~ img {
+  filter: url(#noFilterColourMatrix);
+}
+.cb-demo #protanopiaFilter:checked ~ img {
+  filter: url(#protanopiaColourMatrix);
+}
+.cb-demo #protanomalyFilter:checked ~ img {
+  filter: url(#protanomalyColourMatrix);
+}
+.cb-demo #deuteranopiaFilter:checked ~ img {
+  filter: url(#deuteranopiaColourMatrix);
+}
+.cb-demo #deutranomalyFilter:checked ~ img {
+  filter: url(#deutranomalyColourMatrix);
+}
+.cb-demo #tritanopiaFilter:checked ~ img {
+  filter: url(#tritanopiaColourMatrix);
+}
+.cb-demo #tritanomalyFilter:checked ~ img {
+  filter: url(#tritanomalyColourMatrix);
+}
+.cb-demo #achromatopsiaFilter:checked ~ img {
+  filter: url(#achromatopsiaColourMatrix);
+}
+.cb-demo #achromatomalyFilter:checked ~ img {
+  filter: url(#achromatomalyColourMatrix);
+}
+</style>
+
+
+<div class="cb-demo">
+<form>
+<input type="radio" name="colourBlindnessFilter" id="noFilter"/>
+<label for="noFilter">Sans filtre</label>
+
+<input type="radio" name="colourBlindnessFilter" id="protanopiaFilter"/>
+<label for="protanopiaFilter">Protanopia</label>
+
+<input type="radio" name="colourBlindnessFilter" id="protanomalyFilter"/>
+<label for="protanomalyFilter">Protanomaly</label>
+
+<input type="radio" name="colourBlindnessFilter" id="deuteranopiaFilter"/>
+<label for="deuteranopiaFilter">Deuteranopia</label>
+
+<input type="radio" name="colourBlindnessFilter" id="deutranomalyFilter"/>
+<label for="deutranomalyFilter">Deutranomaly</label>
+
+<input type="radio" name="colourBlindnessFilter" id="tritanopiaFilter"/>
+<label for="tritanopiaFilter">Tritanopia</label>
+
+<input type="radio" name="colourBlindnessFilter" id="tritanomalyFilter"/>
+<label for="tritanomalyFilter">Tritanomaly</label>
+
+<input type="radio" name="colourBlindnessFilter" id="achromatopsiaFilter"/>
+<label for="achromatopsiaFilter">Achromatopsia</label>
+<input type="radio" name="colourBlindnessFilter" id="achromatomalyFilter"/>
+<label for="achromatomalyFilter">Achromatomaly</label>
+
+<img  src="C:\Users\gauti\OneDrive\Bureau\B\école\PROJET BTS\site test\image.jpg"/>
+</form>
+
+  <h2 class="blue">Ceci est bleu</h2>
+  <h2 class="green">Ceci est vert</h2>
+  <h2 class="red">Ceci est rouge</h2>
+
+	<svg height="0">
+		<filter id="protanopiaColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".56667 .43333 0      0 0
+						.55833 .44167 0      0 0
+						0      .24167 .75833 0 0
+						0      0      0      1 0" />
+		</filter>
+
+		<filter id="protanomalyColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".81667 .18333 0    0 0
+						.33333 .66667 0    0 0
+						0      .125   .875 0 0
+						0      0      0    1 0" />
+		</filter>
+
+		<filter id="deuteranopiaColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".625 .375 0  0 0
+						.7   .3   0  0 0
+						0    .3   .7 0 0
+						0    0    0  1 0" />
+		</filter>
+
+		<filter id="deutranomalyColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".8     .2     0      0 0
+						.25833 .74167 0      0 0
+						0      .14167 .85833 0 0
+						0      0      0      1 0" />
+		</filter>
+
+		<filter id="tritanopiaColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".95 .5     0      0 0
+						0   .43333 .56667 0 0
+						0   .475   .525   0 0
+						0   0      0      1 0" />
+		</filter>
+
+		<filter id="tritanomalyColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".96667 .3333  0      0 0
+						0      .73333 .26667 0 0
+						0      .18333 .81667 0 0
+						0      0      0      1 0" />
+		</filter>
+
+		<filter id="achromatopsiaColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".299 .587 .114 0 0
+						.299 .587 .114 0 0
+						.299 .587 .114 0 0
+						0    0    0    1 0" />
+		</filter>
+
+		<filter id="achromatomalyColourMatrix">
+			<feColorMatrix
+				type="matrix"
+				values=".618 .32  .62  0 0
+						.163 .775 .62  0 0
+						.163 .320 .516 0 0
+						0    0    0    1 0" />
+		</filter>
+	</svg>
+</div>
+</body>
+</html>
