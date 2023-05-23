@@ -21,7 +21,8 @@
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
         <div class="create">
-            {% for message in get_flashed_messages() %}
+            <!-- message d'alerte pour la suppréssion d'article ou l'ajout -->
+            {% for message in get_flashed_messages() %} 
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
             <form method="post" enctype="multipart/form-data">
@@ -34,7 +35,8 @@
                 </div>
                 <div>
                     <label for="profile_pic">Sélectionnez une photo pour la miniature. </label>
-                    <input type="file" id="miniature" name="miniature" accept=".jpg, .jpeg, .png" value="{{ request.form['miniature'] }}">
+                    <input type="file" id="miniature" name="miniature" accept=".jpg, .jpeg, .png" 
+                    value="{{ request.form['miniature'] }}">
                 </div>
             
                 <div>
@@ -43,9 +45,9 @@
                     <br>
                     <label for="content">Contenue</label>
                     <br>
-                    <textarea name="content" placeholder="Entrer le contenue" rows="25" cols="150" class="form-control">{{ request.form['content'] }}</textarea>
+                    <textarea name="content" placeholder="Entrer le contenue" rows="25" cols="150" 
+                    class="form-control">{{ request.form['content'] }}</textarea>
                     <br>
-                    <!-- <input type="file" id="annexe" name="annexe" accept=".jpg, .jpeg, .png, .zip, .rar" value="{{ request.form['annexe'] }}" multiple="multiple"> -->
                 </div>
                 <div>
                     <br>

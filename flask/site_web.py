@@ -33,11 +33,11 @@ def get_post(post_id):
                         (post_id,)).fetchone()
     conn.close()
     if post is None:
-        abort(404)
+        abort(404)  
     return post
 
 
-def test():
+def valeur():
     while True:
         total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
         mem=round((used_memory/total_memory) * 100, 2)
@@ -193,7 +193,7 @@ def a_propos():
 #/////////////////////////////////////////////////////////////////////////////////////////////BLOG//////////////////////////
 @app.route('/blog')
 def blog():
-    autorisation = False
+    autorisation = False # détermini si c'est un administrateur ou pas 
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
     try:
@@ -206,7 +206,7 @@ def blog():
         return render_template('blog.html', posts=posts, autorisation = autorisation)
 
 
-#///////////////////////////////////////////////////////////////////////////////////////////////CREATE////////////////////////
+#/////////////////////////////////////////////////////////c//////////////////////////////////////CREATE////////////////////////
 @app.route('/create', methods=('GET', 'POST'))
 def create():
     if session.get('username',False):
@@ -291,7 +291,7 @@ def get():
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
     with app.app_context():
-        t1 = threading.Thread(target=test)
+        t1 = threading.Thread(target=valeur)
         t1.start()
 
     print("Adresse du site: http://127.0.0.1:5000")

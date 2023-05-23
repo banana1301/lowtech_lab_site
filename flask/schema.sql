@@ -22,11 +22,13 @@ CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
 	"Tension"	float,
 	"Courant"	float,
 	"Pourcentage_BAT"	INTEGER,
-	"Luminosite"	INTEGER
+	"Luminosite"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
 CREATE TABLE IF NOT EXISTS 'monitoring' (
 	"cpu"	INTEGER,
 	"mem"	INTEGER,
-	"reseaux"	INTEGER
+	"reseaux"	INTEGER,
+	PRIMARY KEY("id" AUTOINCREMENT)
 );
