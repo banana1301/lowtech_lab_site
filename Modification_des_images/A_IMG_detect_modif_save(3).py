@@ -6,7 +6,7 @@ from PIL import Image, ImageFilter
 
 
 #Chemin du dossier a surveiller
-dossier_a_surveiller = r"/home/gautier/Téléchargements/import le m├йlange/PROJET BTS/flask_V1/static/images" #dossier d'enregistrement des images
+dossier_a_surveiller = r"static/photos" #dossier d'enregistrement des images
 avant = dict ([(f, None) for f in os.listdir (dossier_a_surveiller)])
 
 
@@ -82,4 +82,3 @@ while 1:
     if supprimes:
         print ("supprimes: ", ", ".join (supprimes))
         avant = apres
-
