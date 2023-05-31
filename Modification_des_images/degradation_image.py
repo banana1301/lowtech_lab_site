@@ -37,7 +37,7 @@ while 1:
             #           |___/
 
 
-                fichier_res_high = fichier.split(".")[0] + "_high." + fichier.split(".")[1] #Renommer l'image en ajoutant "_high" a la fin du nom
+                fichier_res_high = fichier.split(".")[0] + "" + fichier.split(".")[1] #pour renommer l'image aute qualité, ajouter du texte dans les guillements vides.
                 os.rename(os.path.join(dossier_a_surveiller, fichier), os.path.join(dossier_a_surveiller, fichier_res_high))
 
 
