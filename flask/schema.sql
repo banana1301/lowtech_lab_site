@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS 'posts' (
 );
 
 CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
+	"id"	INTEGER NOT NULL,
 	"date_jour"	DATETIME,
 	"Tension"	float,
 	"Courant"	float,
@@ -27,8 +28,10 @@ CREATE TABLE IF NOT EXISTS 'VALEURS_CAPTEURS' (
 );
 
 CREATE TABLE IF NOT EXISTS 'monitoring' (
+	"id"	INTEGER NOT NULL,
 	"cpu"	INTEGER,
 	"mem"	INTEGER,
 	"reseaux"	INTEGER,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
+

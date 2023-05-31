@@ -10,7 +10,6 @@
 
 header{
     color: black;
-
 }
 
 .sigle{
@@ -71,6 +70,63 @@ nav #contraste{
     transition: 1s;
 }
 
+.sigle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+nav h1{
+    font-size: 60px;
+    margin-right: 210px;
+}
+
+nav .icone{
+    font-size: 30px;
+}
+
+nav #daltonien{
+    margin-right:20px;
+    color: black;
+}
+
+nav #contraste{
+    margin-right: 20px;
+    color: black;
+}
+
+.menu{
+    display: flex;
+    justify-content: space-between;
+    /* background-color: #F2F3F4; */
+    font-size: 25px;
+    padding: 10px;
+    position: -webkit-sticky;
+	position: sticky;
+	top: 5px;
+    
+}
+
+#acceuil {
+    margin-left: 350px;
+}
+
+#a_propos{
+    margin-right: 350px;
+}
+
+.menu a{
+    border: solid;
+    border-radius: 30px;
+    padding: 7px;
+
+}
+
+.menu a:hover{
+    background-color: #1C2833;
+    color: white;
+    transition: 1s;
+}
 
 /* ------------------------------- navbar de navigation -------------------------------------------------------------------------*/
 
@@ -138,10 +194,9 @@ footer{
 
 /*-----------------------------------btn dalto-----------------------------------------------*/
 
-
-
 #CONTENU {
     filter: url(#myFilter);
+    /* text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000; */
 }
 
 .dropdown {

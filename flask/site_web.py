@@ -1,4 +1,5 @@
 #////////////////////////////IMPORTATION//////////////////////////////////
+
 from flask import Flask, render_template, url_for, redirect, request, session,flash
 import threading
 import re
@@ -10,6 +11,8 @@ from werkzeug.utils import secure_filename
 import os
 import time
 import psutil
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter, DayLocator
 import matplotlib.dates as dt
@@ -97,7 +100,7 @@ def register():
             # Si le compte n'existe pas 
             curseur.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}','{}')".format(nom,prenom,email,hmdp,'internaute'))
             connection.commit()
-            msg='Compte enregistrer'
+            msg='Compte enregistré'
             return redirect("login")
     elif request.method == 'POST':
         #si le formulaire est vide
@@ -136,20 +139,17 @@ def home():
 #//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
-    
-    fig1, ax1 = plt.subplots()
-    fig2, ax2 = plt.subplots()
-
     cpu = curseur.execute('SELECT cpu from monitoring;').fetchall()
     mem = curseur.execute('SELECT mem from monitoring;').fetchall()
     cpu1= list(cpu[-1])
     mem1 = list(mem[-1])
     
     pourcent_bat = curseur.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;').fetchall()
-    pourcent_bat1 = []
-    for i in range(5):
-        pourcent_bat1.append(list(pourcent_bat[-1 - i]))
-    print(pourcent_bat1)
+    extracted_list_bat = [item for tuple_ in pourcent_bat for item in tuple_]
+    bat_affiche=[]
+    for i in range (5):
+        bat_affiche.append(extracted_list_bat[-1 - i])
+    print("valeur affiche batterie ---->",bat_affiche)
     
     date = curseur.execute('SELECT date_jour from VALEURS_CAPTEURS;').fetchall()
     date1 = []
@@ -157,34 +157,32 @@ def graphique():
         date1.append(list(date[-1 - i]))
     date_liste = [x[0] for x in date1]
     print("c'est la date ---->",date_liste)
+
+    fig, ax1 = plt.subplots()
+    ax1.plot(date_liste,bat_affiche)
+    ax1.set_xlabel('Dates')
+    ax1.set_ylabel('Pourcentage')
+    ax1.set_title('Graphique 1')
     
-    x = [dt.datetime.strptime(d,'%Y-%m-%d %H:%M:%S').date() for d in date_liste]
-    y = pourcent_bat1
-    
-    ax1.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
-    ax1.xaxis.set_major_locator(DayLocator())
-    ax1.plot(x,y)
-    fig1.autofmt_xdate()
-    fig1.savefig('static/ressource/graph/graph_bat.png')
-    
+    fig.autofmt_xdate()
+    plt.savefig('static/ressource/graph/graph_bat.png')
+
     courant = curseur.execute('SELECT Courant from VALEURS_CAPTEURS;').fetchall()
-    courant1 = []
-    for i in range(5):
-        courant1.append(list(courant[-1 - i]))
-    courant_liste = [x[0] for x in courant1]
-    print("C'est le courant -->",courant1)
+    extracted_list_courant = [item for tuple_ in courant for item in tuple_]
+    courant_affiche=[]
+    for i in range (5):
+        courant_affiche.append(extracted_list_courant[-1 - i])
+    print("valeur afficher courant ---->",courant_affiche)
+
+    fig, ax2 = plt.subplots()
+    ax2.plot(date_liste,courant_affiche)
+    ax2.set_xlabel('Dates')
+    ax2.set_ylabel('Courant')
+    ax2.set_title('Graphique 2')
     
-    y2 = courant_liste
-    
-    ax2.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d %H:%M:%S'))
-    ax2.xaxis.set_major_locator(DayLocator())
-    ax2.plot(x,y2)
-    fig2.autofmt_xdate()
-    fig2.savefig('static/ressource/graph/graph_courant.png')
-    
+    fig.autofmt_xdate()
+    plt.savefig('static/ressource/graph/graph_courant.png')
     return render_template('graphique.html',mem = mem1[0], cpuload = cpu1[0])
-
-
 
 #//////////////////////////////////////////////////////////////////////////////////////////A PROPOS/////////////////
 @app.route('/a_propos')
@@ -274,7 +272,7 @@ def delete(id):
     conn.execute('DELETE FROM posts WHERE id = ?', (id,))
     conn.commit()
     conn.close()
-    flash('"{}" Supprimer avec succes !'.format(post['title']))
+    flash('"{}" Supprimer avec succès !'.format(post['title']))
     return redirect(url_for('blog'))
 #//////////////////////////////////////////////////////////////////////////////////////////TEST//////////////////////
 @app.route('/test')
@@ -295,7 +293,6 @@ if __name__ == "__main__":
         t1.start()
 
     print("Adresse du site: http://127.0.0.1:5000")
-    print("Le site et accessible depuis son ip local aussi.")
+    print("Le site est accessible depuis son ip local aussi.")
     print("En cours d'exécution...")
     serve(app, host='0.0.0.0', port= 5000)
-    

@@ -20,7 +20,7 @@
     </header>
 <!-- --------------------------------------------------navbar------------------------------------------------------------- -->
     <body>
-        <div class="container">
+        <div class="create">
             {% for message in get_flashed_messages() %}
                 <div class="alert alert-danger">{{ message }}</div>
             {% endfor %}
@@ -29,14 +29,16 @@
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" placeholder="Post title"
-                        class="form-control"
+                        class="form-control" size="50"
                         value="{{ request.form['title'] or post['title'] }}">
                     </input>
                 </div>
-
+                <br>
+                <br>
+                <br>
                 <div class="form-group">
                     <label for="content">Content</label>
-                    <textarea name="content" placeholder="Post content"
+                    <textarea name="content" placeholder="Post content" rows="25" cols="150"
                             class="form-control">{{ request.form['content'] or post['content'] }}</textarea>
                 </div>
                 <div class="form-group">
