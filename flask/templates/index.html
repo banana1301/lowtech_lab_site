@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html id="CONTENU">
+
+    <head>
+        <title>LowTech</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="{{ url_for('static',filename='styles/style.css')}} ">
+        <script src="https://kit.fontawesome.com/6d4b55bdfe.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Source+Code+Pro&display=swap" rel="stylesheet">
+    </head>
+
+    <header>
+
+        {% include "partials/_navbar.html" %}
+
+    </header>
+<!-- --------------------------------------------------navbar------------------------------------------------------------- -->
+    <body>
+        <div class="parallax">
+            <h1 id="pre">Présentation</h1>
+        </div>
+
+        <p id="text_presentation">
+            Le mouvement low-tech est une approche qui met l'accent sur l'utilisation de solutions simples, durables et 
+            accessibles pour répondre aux besoins de base de la vie quotidienne. Le terme "low-tech" fait référence à une 
+            technologie minimaliste et non complexe, souvent inspirée par des méthodes et des savoir-faire traditionnels.
+            Les adeptes du mouvement low-tech cherchent à promouvoir une transition vers des modes de vie plus durables, en 
+            limitant l'empreinte écologique et en favorisant l'autonomie des individus. Plutôt que de dépendre de technologies 
+            de pointe souvent coûteuses et énergivores, ils privilégient des alternatives simples et accessibles.
+            Dans le domaine de l'énergie, le low-tech encourage l'utilisation de sources d'énergie renouvelable telles que
+            l'énergie solaire et éolienne, ainsi que des techniques d'efficacité énergétique pour réduire la consommation.
+            Par exemple, l'utilisation de panneaux solaires pour produire de l'électricité ou de poêles à bois pour le 
+            chauffage.En ce qui concerne l'agriculture, le low-tech met l'accent sur des méthodes biologiques et respectueuses 
+            de l'environnement, telles que la permaculture, l'agroforesterie et l'agriculture urbaine. Les techniques de culture
+            traditionnelles, l'utilisation de semences locales et la rotation des cultures sont également encouragées.
+            Dans le domaine de la construction, le low-tech favorise l'utilisation de matériaux durables et facilement 
+            disponibles, tels que le bois, la pierre et la terre. Les techniques de construction traditionnelles, telles que 
+            l'architecture en terre crue, sont valorisées pour leur efficacité énergétique et leur faible impact environnemental.
+            Le low-tech s'étend également aux domaines de l'alimentation, du transport, de la santé et de l'éducation. Dans 
+            tous ces domaines, l'approche low-tech vise à promouvoir des solutions simples, économiques et écologiques, 
+            accessibles à tous, tout en réduisant notre dépendance aux technologies complexes et coûteuses.
+            En somme, le mouvement low-tech incarne une philosophie de simplicité, de durabilité et d'autonomie, en mettant 
+            l'accent sur des solutions pratiques et accessibles pour un mode de vie plus respectueux de l'environnement.
+        </p>
+
+        {% include "partials/_pastille_site.html" %}
+    </body>
+<!-- --------------------------------------------------footer------------------------------------------------------ -->
+    <footer>
+        {% include "partials/_footer.html" %}
+    </footer>
+
+</html>
