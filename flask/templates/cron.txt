@@ -1,0 +1,2 @@
+#!/usr/bin/python3
+@reboot /home/pi/Documents/lowtech_lab_site_web/flask/demarrage.sh

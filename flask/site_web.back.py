@@ -1,6 +1,6 @@
 #////////////////////////////IMPORTATION//////////////////////////////////
 
-from flask import Flask, render_template, url_for, redirect, request, session,flash,jsonify
+from flask import Flask, render_template, url_for, redirect, request, session,flash
 import threading
 import re
 import sqlite3
@@ -133,31 +133,14 @@ def home():
 
 
 
-
-
-@app.route('/changer_etat')
-def changer_etat():
-    etat = request.args.get('etat')
-    
-    if etat == 'true':
-        print("l'etat:", etat)
-        #ici requete SQL pour mettre l'etat des image en haute qualité
-    else:
-        print("l'etat:", etat)
-        #ici requete SQL pour mettre l'etat des image en basse qualité
-
-    return jsonify({'etat': etat})
-
-
 #//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
-    
     cpu = curseur.execute('SELECT cpu from monitoring;').fetchall()
     mem = curseur.execute('SELECT mem from monitoring;').fetchall()
     cpu1= list(cpu[-1])
     mem1 = list(mem[-1])
-    permissions = 0o777
+    
     pourcent_bat = curseur.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;').fetchall()
     extracted_list_bat = [item for tuple_ in pourcent_bat for item in tuple_]
     bat_affiche=[]
@@ -180,8 +163,7 @@ def graphique():
     
     fig.autofmt_xdate()
     plt.savefig('static/ressource/graph/graph_bat.png')
-    fichier = 'static/ressource/graph/graph_bat.png'
-    os.chmod(fichier, permissions)
+
     courant = curseur.execute('SELECT Courant from VALEURS_CAPTEURS;').fetchall()
     extracted_list_courant = [item for tuple_ in courant for item in tuple_]
     courant_affiche=[]
@@ -197,9 +179,8 @@ def graphique():
     
     fig.autofmt_xdate()
     plt.savefig('static/ressource/graph/graph_courant.png')
-    fichier = 'static/ressource/graph/graph_courant.png'
-    os.chmod(fichier, permissions)
     
+
     print("---------------------------------------------------------------------------------")
     return render_template('graphique.html',mem = mem1[0], cpuload = cpu1[0])
 
