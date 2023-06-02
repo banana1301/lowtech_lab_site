@@ -1,5 +1,4 @@
 #////////////////////////////IMPORTATION//////////////////////////////////
-
 from flask import Flask, render_template, url_for, redirect, request, session,flash,jsonify
 import threading
 import re
@@ -19,19 +18,13 @@ app = Flask(__name__)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SECRET_KEY'] = '7z3V98deMEiYRfF2x4i9'
 #////////////////////////////////////CONNECTION BDD////////////////////////
-connection = sqlite3.connect('database.db',check_same_thread=False)
-curseur = connection.cursor()
-
-def get_db_connection():
-    conn = sqlite3.connect('database.db')
-    conn.row_factory = sqlite3.Row
-    return conn
-
 def get_post(post_id):
-    conn = get_db_connection()
-    post = conn.execute('SELECT * FROM posts WHERE id = ?',
+    connection_get_post = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_get_post = connection_get_post.cursor()
+    curseur_get_post.row_factory = sqlite3.Row
+    post = curseur_get_post.execute('SELECT * FROM posts WHERE id = ?',
                         (post_id,)).fetchone()
-    conn.close()
+    connection_get_post.close()
     if post is None:
         abort(404)  
     return post
@@ -39,16 +32,21 @@ def get_post(post_id):
 
 def valeur():
     while True:
+        connection_valeur =sqlite3.connect('database.db',check_same_thread=False)
+        curseur_valeur= connection_valeur.cursor()
         total_memory, used_memory, free_memory = map(int, os.popen('free -t -m').readlines()[-1].split()[1:])
         mem=round((used_memory/total_memory) * 100, 2)
         cpuload = psutil.cpu_percent(interval=1)
-        curseur.execute('INSERT INTO monitoring (cpu, mem) VALUES (?,?)',(cpuload, mem))
-        connection.commit()
+        curseur_valeur.execute('INSERT INTO monitoring (cpu, mem) VALUES (?,?)',(cpuload, mem))
+        connection_valeur.commit()
+        connection_valeur.close()
         time.sleep(2)
 #////////////////////////////////////////////////////////////////////////////////LOGIN///////////////////////////////
 
 @app.route('/login',methods=['GET','POST'])
 def login():
+    connection_login = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_login = connection_login.cursor()
     # créer une variable pour stocker les erreur dedans par la suite
     msg=''
     # verifie que les champs sont remplie
@@ -57,9 +55,9 @@ def login():
         email = request.form['email']
         mdp = request.form['mdp']
         #chercher si le compte existe
-        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
+        curseur_login.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
         # retourner les valeurs
-        account= curseur.fetchone()
+        account= curseur_login.fetchone()
         # print(account)
         # print(account[4])
         # print(check_password_hash(account[4],mdp))
@@ -78,6 +76,8 @@ def login():
 #//////////////////////////////////////////////////////////////////////////////////REGISTER///////////////////////////////////
 @app.route('/register', methods=['GET','POST'])
 def register():
+    connection_register = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_register = connection_register.cursor()
     msg=''
     if request.method == 'POST' and 'email' in request.form and 'nom' in request.form and 'prenom' in request.form and 'mdp' in request.form:
         email = request.form['email']
@@ -85,8 +85,8 @@ def register():
         prenom = request.form['prenom']
         mdp = request.form['mdp']
         hmdp=generate_password_hash(mdp, method='pbkdf2:sha1', salt_length=8)
-        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
-        account= curseur.fetchone()
+        curseur_register.execute("SELECT * FROM users WHERE email = '{}' ".format(email))
+        account= curseur_register.fetchone()
         if account:
             msg = 'Le compte existe déjà'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -95,13 +95,14 @@ def register():
             msg = 'Remplir le forulaire !'
         else:
             # Si le compte n'existe pas 
-            curseur.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}','{}')".format(nom,prenom,email,hmdp,'internaute'))
-            connection.commit()
+            curseur_register.execute("INSERT INTO users VALUES (NULL,'{}','{}','{}','{}','{}')".format(nom,prenom,email,hmdp,'internaute'))
+            connection_register.commit()
             msg='Compte enregistré'
             return redirect("login")
     elif request.method == 'POST':
         #si le formulaire est vide
         msg= "Remplir tous les champs !"
+    connection_register.close()
     return render_template('inscription.html', msg=msg)
 #//////////////////////////////////////////////////////////////////////////////////////LOGOUT//////////////////////
 @app.route('/logout')
@@ -116,24 +117,17 @@ def logout():
 #///////////////////////////////////////////////////////////////////////////////////////HOME///////////////////////////
 @app.route('/')
 def home():
-    database_path = 'database.db' # chemin de la base de données
-    conn = sqlite3.connect(database_path) # connexion à la base de données
-    cursor = conn.cursor() # création du curseur
-    cursor.execute('SELECT Pourcentage_BAT FROM VALEURS_CAPTEURS ORDER BY date_jour DESC LIMIT 1') # requête SQL d'acquisition des données de batterie en fonction de la date pour obtenir le plus récent
-    row = cursor.fetchone()
+    connection_home = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_home = connection_home.cursor()    
+    curseur_home.execute('SELECT Pourcentage_BAT FROM VALEURS_CAPTEURS ORDER BY date_jour DESC LIMIT 1') # requête SQL d'acquisition des données de batterie en fonction de la date pour obtenir le plus récent
+    row = curseur_home.fetchone()
 
     if row is not None:
         pourcent = row[0] # row[0] stoque désormais la valeur prise dans la bdd
     else:
         pourcent = 0
-
-    cursor.close()
-    conn.close()
+    connection_home.close()
     return render_template('index.html', pourcent_battery_recupere=pourcent)
-
-
-
-
 
 @app.route('/changer_etat')
 def changer_etat():
@@ -148,28 +142,32 @@ def changer_etat():
 
     return jsonify({'etat': etat})
 
-
 #//////////////////////////////////////////////////////////////////////////////////////////GRAPHIQUE/////////////////////////
 @app.route('/graphique')
 def graphique():
     
-    cpu = curseur.execute('SELECT cpu from monitoring;').fetchall()
-    mem = curseur.execute('SELECT mem from monitoring;').fetchall()
+    connection_graph = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_graph = connection_graph.cursor()
+    
+    cpu = curseur_graph.execute('SELECT cpu from monitoring;').fetchall()
+    mem = curseur_graph.execute('SELECT mem from monitoring;').fetchall()
     cpu1= list(cpu[-1])
     mem1 = list(mem[-1])
     permissions = 0o777
-    pourcent_bat = curseur.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;').fetchall()
+    pourcent_bat = curseur_graph.execute('SELECT Pourcentage_BAT from VALEURS_CAPTEURS;').fetchall()
     extracted_list_bat = [item for tuple_ in pourcent_bat for item in tuple_]
     bat_affiche=[]
     for i in range (5):
         bat_affiche.append(extracted_list_bat[-1 - i])
+    bat_affiche.reverse()
     print("valeur affiche batterie ---->",bat_affiche)
     
-    date = curseur.execute('SELECT date_jour from VALEURS_CAPTEURS;').fetchall()
+    date = curseur_graph.execute('SELECT date_jour from VALEURS_CAPTEURS;').fetchall()
     date1 = []
     for i in range (5):
         date1.append(list(date[-1 - i]))
     date_liste = [x[0] for x in date1]
+    date_liste.reverse()
     print("c'est la date ---->",date_liste)
 
     fig, ax1 = plt.subplots()
@@ -182,11 +180,12 @@ def graphique():
     plt.savefig('static/ressource/graph/graph_bat.png')
     fichier = 'static/ressource/graph/graph_bat.png'
     os.chmod(fichier, permissions)
-    courant = curseur.execute('SELECT Courant from VALEURS_CAPTEURS;').fetchall()
+    courant = curseur_graph.execute('SELECT Courant from VALEURS_CAPTEURS;').fetchall()
     extracted_list_courant = [item for tuple_ in courant for item in tuple_]
     courant_affiche=[]
     for i in range (5):
         courant_affiche.append(extracted_list_courant[-1 - i])
+    courant_affiche.reverse()
     print("valeur afficher courant ---->",courant_affiche)
 
     fig, ax2 = plt.subplots()
@@ -199,7 +198,7 @@ def graphique():
     plt.savefig('static/ressource/graph/graph_courant.png')
     fichier = 'static/ressource/graph/graph_courant.png'
     os.chmod(fichier, permissions)
-    
+    connection_graph.close()
     print("---------------------------------------------------------------------------------")
     return render_template('graphique.html',mem = mem1[0], cpuload = cpu1[0])
 
@@ -210,43 +209,44 @@ def a_propos():
 #/////////////////////////////////////////////////////////////////////////////////////////////BLOG//////////////////////////
 @app.route('/blog')
 def blog():
-    autorisation = False # détermini si c'est un administrateur ou pas 
-    conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
+    connection_blog = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_blog = connection_blog.cursor()
+    curseur_blog.row_factory = sqlite3.Row
+    autorisation = False # détermini si c'est un administrateur ou pas     
+    posts = curseur_blog.execute('SELECT * FROM posts').fetchall()
     try:
-        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
-        account= curseur.fetchone()
+        curseur_blog.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur_blog.fetchone()
         print (account[5])
         if account[5]=='admin':
             autorisation = True
     finally:
+        connection_blog.close()
         return render_template('blog.html', posts=posts, autorisation = autorisation)
-
 
 #/////////////////////////////////////////////////////////c//////////////////////////////////////CREATE////////////////////////
 @app.route('/create', methods=('GET', 'POST'))
 def create():
+    connection_create = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_create = connection_create.cursor()
     if session.get('username',False):
-        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
-        account= curseur.fetchone()
+        curseur_create.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur_create.fetchone()
         print(account)
         if account[5]=='admin':
             if request.method == 'POST':
                 title = request.form['title']
                 content = request.form['content']
                 miniature = request.files['miniature']
-                # annexe = request.files['annexe']
-
                 if not title:
                     flash('Titre requie!')
                 else:
                     filename = secure_filename("miniature."+title+".png")
                     emplacement="/static/photos/miniature/" + filename
                     miniature.save('./static/photos/miniature/' + filename)
-                    conn = get_db_connection()
-                    conn.execute('INSERT INTO posts (title, content, miniature) VALUES (?,?,?)',(title, content,emplacement))
-                    conn.commit()
-                    conn.close()
+                    curseur_create.execute('INSERT INTO posts (title, content, miniature) VALUES (?,?,?)',(title, content,emplacement))
+                    connection_create.commit()
+                    connection_create.close()
                     return redirect(url_for('blog'))
             return render_template('create.html')
         else:
@@ -261,9 +261,11 @@ def post(post_id):
 #////////////////////////////////////////////////////////////////////////////////////////////////EDIT/////////////////
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 def edit(id):
+    connection_edit= sqlite3.connect('database.db',check_same_thread=False)
+    curseur_edit = connection_edit.cursor()
     try:
-        curseur.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
-        account= curseur.fetchone()
+        curseur_edit.execute("SELECT * FROM users WHERE email = '{}' ".format(session.get('username')))
+        account= curseur_edit.fetchone()
         print(account)
         if account[5]=='admin':
             post = get_post(id)
@@ -273,24 +275,26 @@ def edit(id):
                 if not title:
                     flash('Titre requit !')
                 else:
-                    conn = get_db_connection()
-                    conn.execute('UPDATE posts SET title = ?, content = ?'
+                    curseur_edit.execute('UPDATE posts SET title = ?, content = ?'
                                 ' WHERE id = ?',
                                 (title, content, id))
-                    conn.commit()
-                    conn.close()
+                    connection_edit.commit()
+                    connection_edit.close()
                     return redirect(url_for('blog'))
+                connection_edit.close()
             return render_template('edit.html', post=post)
     except:
+        connection_edit.close()
         return redirect(url_for('login'))
 #//////////////////////////////////////////////////////////////////////////////////////////DELETE//////////////////////
 @app.route('/<int:id>/delete', methods=('POST',))
 def delete(id):
+    connection_delete = sqlite3.connect('database.db',check_same_thread=False)
+    curseur_delete = connection_delete.cursor()
     post = get_post(id)
-    conn = get_db_connection()
-    conn.execute('DELETE FROM posts WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
+    curseur_delete.execute('DELETE FROM posts WHERE id = ?', (id,))
+    connection_delete.commit()
+    connection_delete.close()
     flash('"{}" Supprimer avec succès !'.format(post['title']))
     return redirect(url_for('blog'))
 #//////////////////////////////////////////////////////////////////////////////////////////TEST//////////////////////
@@ -299,11 +303,7 @@ def get():
     return session.get('username','not set')
     #return render_template('test.html')
 
-
 #//////////////////////////////////////////////////////////////////////////TEST2//////////
-# upload_folder = os.path.join('static', 'photos/miniature/')
-# app.config['UPLOAD'] = upload_folder
-
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", debug=True)
